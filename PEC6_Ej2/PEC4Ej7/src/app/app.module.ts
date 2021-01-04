@@ -15,6 +15,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { WineListComponent } from './wine-list/wine-list.component';
 import { WineNewComponent } from './wine-new/wine-new.component';
 
+import { WineService } from './services/wine.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +36,7 @@ import { WineNewComponent } from './wine-new/wine-new.component';
     MatInputModule,
     MatCheckboxModule,
   ],
-  providers: [],
+  providers: [WineService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

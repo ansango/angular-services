@@ -1,15 +1,15 @@
 <div>
   <mat-card
     class="wine-card"
-    [class]="wine.quantityInCart > 0 ? 'is-stock-shadow' : 'out-stock-shadow'"
+    [class]="wine.isOnSale === true ? 'is-stock-shadow' : 'out-stock-shadow'"
   >
     <mat-card-header>
       <mat-card-title>{{ wine.name }}</mat-card-title>
       <mat-card-subtitle
         class="wine-subtitle"
-        [class]="wine.quantityInCart > 0 ? 'is-stock-color' : 'out-stock-color'"
+        [class]="wine.isOnSale === true? 'is-stock-color' : 'out-stock-color'"
         >{{
-          wine.quantityInCart > 0 ? "available" : "unavilable"
+          wine.isOnSale === true ? "available" : "unavilable"
         }}</mat-card-subtitle
       >
     </mat-card-header>

@@ -6,17 +6,9 @@ import {
   Output,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import Food from '../model/food';
-import Wine from '../model/wine';
 
-export enum QuantityChange {
-  INCREMENT,
-  DECREMENT,
-}
-export interface WineQuantityChange {
-  id: number;
-  quantityChange: QuantityChange;
-}
+import Wine from '../model/wine';
+import WineQuantityChange from '../model/wine-quantity-change';
 @Component({
   selector: 'app-wine-item',
   templateUrl: './wine-item.component.html',
@@ -26,9 +18,7 @@ export interface WineQuantityChange {
 export class WineItemComponent implements OnInit {
   @Input() public wine!: Wine;
   @Output()
-  private wineQuantityChangeEvent: EventEmitter<WineQuantityChange> = new EventEmitter<WineQuantityChange>();
-  public counter: number = 0;
-  public units!: number[];
+  private wineQuantityChange: EventEmitter<WineQuantityChange> = new EventEmitter();
 
   constructor() {}
 
@@ -37,18 +27,20 @@ export class WineItemComponent implements OnInit {
   }
 
   increment(): void {
-    this.wineQuantityChangeEvent.emit({
-      id: this.wine.id,
-      quantityChange: QuantityChange.INCREMENT,
+    this.wineQuantityChange.emit({
+      wine: this.wine,
+      quantityChange: 1,
     });
   }
   decrement(): void {
     if (this.wine.quantityInCart === 0) {
       return;
     }
-    this.wineQuantityChangeEvent.emit({
-      id: this.wine.id,
-      quantityChange: QuantityChange.DECREMENT,
-    });
+    if (this.wine.quantityInCart > 0) {
+      this.wineQuantityChange.emit({
+        wine: this.wine,
+        quantityChange: -1,
+      });
+    }
   }
 }

@@ -5,7 +5,7 @@ export default class Wine {
     public name: string,
     public imgUrl: string,
     public price: number,
-    public quantityInCart: number,
+    public quantityInCart: number = 0,
     public isOnSale: boolean,    
     public foodParing: Food[]
   ) {}
