@@ -145,33 +145,95 @@ una de las siguientes preguntas:
      - Es un contexto de ejecución. Denota dónde y cuándo se ejecuta la tarea (por ejemplo, inmediatamente, o en otro mecanismo de devolución de llamada como setTimeout o process.nextTick, o el marco de la animación).
      - Tiene un reloj (virtual). Proporciona una noción de "tiempo" mediante un método getter now() en el scheduler. Las tareas que se programen en un planificador en particular se adherirán sólo a la hora indicada por ese reloj.
 
-      ```
-      import { Observable, asyncScheduler } from 'rxjs';
-      import { observeOn } from 'rxjs/operators';
-   
-      const observable = new Observable((observer) => {
-         observer.next(1);
-         observer.next(2);
-         observer.next(3);
-         observer.complete();
-      }).pipe(
-         observeOn(asyncScheduler)
-      );
-   
-      console.log('just before subscribe');
-      observable.subscribe({
-         next(x) {
-            console.log('got value ' + x)
-         },
-         error(err) {
-            console.error('something wrong occurred: ' + err);
-         },
-         complete() {
-            console.log('done');
-         }
-      });
-      console.log('just after subscribe');
-      ```
+     ```
+     import { Observable, asyncScheduler } from 'rxjs';
+     import { observeOn } from 'rxjs/operators';
+
+     const observable = new Observable((observer) => {
+        observer.next(1);
+        observer.next(2);
+        observer.next(3);
+        observer.complete();
+     }).pipe(
+        observeOn(asyncScheduler)
+     );
+
+     console.log('just before subscribe');
+     observable.subscribe({
+        next(x) {
+           console.log('got value ' + x)
+        },
+        error(err) {
+           console.error('something wrong occurred: ' + err);
+        },
+        complete() {
+           console.log('done');
+        }
+     });
+     console.log('just after subscribe');
+     ```
 
 4. ¿Cuál es la diferencia entre promesas y observables?
+
+   Las promesas y los observables se ejecutan de forma asíncrona, la principal diferencia entre ambos es que mientras las promesas devuelven un único resultado, los Observables nos permiten definir una secuencia a partir de todos los métodos que nos ofrecen.
+
+   Esto no siempre será lo mejor, si únicamente necesitamos acceder al valor retornado por la petición, la promesa será suficiente.
+
+   - Ejemplo de promesa:
+
+     ```
+        export class User {
+        	userPromise() {
+        		return new Promise((resolve, reject) => {
+        			if(1 === 1) {
+        				return resolve([{name: 'Iparra'}])
+        			}
+        			return reject({msg: 'error'});
+        		})
+        	}
+        }
+
+        let user = new User();
+        let promise = user.getUserPromise();
+
+        promise.then(user => {
+        	console.log(user[0]); //{name: 'Iparra'}
+        }).catch(error => {
+        	console.log(error); //Uncaught {msg: "error"}
+        });
+     ```
+
+     Una promesa resuelve o rechaza, si todo ha ido bien al ejecutar then tendremos el valor esperado, en otro lugar, dentro del catch tendremos el error que hemos devuelto, en este caso con reject, así de simple.
+
+   - Ejemplo de observable:
+
+     ```
+      import { Observable } from 'rxjs/Observable';
+      import 'rxjs/add/operator/map';
+      import 'rxjs/add/operator/catch';
+      import 'rxjs/add/observable/of';
+
+      class User {
+      	userObservable() {
+      		return Observable.of([{name: 'Iparra'}])
+      			.map(user => user[0])
+      			.catch(error => Observable.throw(err));
+      	}
+      }
+
+      let user = new User();
+      let userObservable = user.userObservable();
+      userObservable.subscribe(
+      	result => {
+      		console.log(result); //[{name: 'Iparra'}]
+      	},
+      	error => {
+      		console.log(error);
+      	}
+      );
+
+     ```
+
 5. ¿Cuál es la función de la tubería (pipe) async?
+
+Async pipe se suscribe a un Observable o Promesa y devuelve el último valor que ha emitido. Cuando se emite un nuevo valor, la tubería marca el componente que se debe comprobar para ver si hay cambios. Cuando el componente se destruye, el tubo async se desinscribe automáticamente para evitar posibles fugas de memoria.
