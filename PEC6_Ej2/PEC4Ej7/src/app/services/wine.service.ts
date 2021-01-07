@@ -75,8 +75,6 @@ export class WineService {
   createWine(wine: Wine): Observable<any> {
     let _wine = Object.assign({}, wine); // hacemos copia del objeto
     _wine.id = this.wines.length + 1; // declaramos un nuevo id en el objeto
-    _wine.imgUrl =
-      'https://api.time.com/wp-content/uploads/2015/05/pouring-red-wine.jpg?w=800&quality=85';
     this.wines.push(_wine);
     return of(_wine);
   }
