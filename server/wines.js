@@ -67,7 +67,7 @@ const wines = [
     ],
     isOnSale: false,
     quantityInCart: 0
-  }
+  },
 ];
 
 router.get('/', (req, res) => {
