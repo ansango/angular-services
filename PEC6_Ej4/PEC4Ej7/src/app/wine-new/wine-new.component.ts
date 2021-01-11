@@ -41,7 +41,7 @@ export class WineNewComponent implements OnInit {
         [
           Validators.required,
           Validators.pattern(
-            '^https?://(?:[a-z0-9-]+.)+[a-z]{2,6}(?:/[^/#?]+)+.(?:jpg|gif|png)$'
+            '(?:[a-z0-9-]+.)+[a-z]{2,6}(?:/[^/#?]+)+.(?:jpg|gif|png)$'
           ),
         ],
       ],
